@@ -1,0 +1,221 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  password  String
+  name      String?
+  role      String     @default("admin")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  sessions Session[]
+}
+
+model Session {
+  id        String     @id @default(cuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime   @default(now())
+
+  @@index([userId])
+}
+
+model Website {
+  id            String     @id @default(cuid())
+  domain        String     @unique
+  displayName   String
+  description   String?
+  isActive      Boolean    @default(true)
+  createdAt     DateTime   @default(now())
+  lastScanAt    DateTime?
+  updatedAt     DateTime   @updatedAt
+
+  scans         Scan[]
+  pages         Page[]
+  errorLogs     ErrorLog[]
+  seoMetrics    SeoMetrics?
+  securityMetrics SecurityMetrics?
+  analytics     Analytics?
+}
+
+model Scan {
+  id            String     @id @default(cuid())
+  websiteId     String
+  website       Website    @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+  
+  // Scan metadata
+  status        String     @default("pending") // pending, running, completed, failed
+  startedAt     DateTime   @default(now())
+  completedAt   DateTime?
+  
+  // Scan results
+  pagesFound    Int        @default(0)
+  pagesScanned  Int        @default(0)
+  brokenLinks   Int        @default(0)
+  httpErrors    Int        @default(0)
+  
+  pages         Page[]
+  errorLogs     ErrorLog[]
+
+  @@index([websiteId])
+  @@index([status])
+}
+
+model Page {
+  id            String     @id @default(cuid())
+  websiteId     String
+  website       Website    @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+  scanId        String?
+  scan          Scan?      @relation(fields: [scanId], references: [id], onDelete: SetNull)
+  
+  url           String
+  title         String?
+  metaDescription String?
+  h1            String?
+  statusCode    Int        @default(200)
+  
+  // SEO Metrics
+  hasMetaDescription Boolean @default(false)
+  internalLinks Int        @default(0)
+  externalLinks Int        @default(0)
+  wordCount     Int        @default(0)
+  hasH1         Boolean    @default(false)
+  imageCount    Int        @default(0)
+  
+  // Performance
+  loadTime      Float?     @default(0)
+  isIndexable   Boolean    @default(true)
+  
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@index([websiteId])
+  @@index([scanId])
+  @@unique([websiteId, url])
+}
+
+model ErrorLog {
+  id            String     @id @default(cuid())
+  websiteId     String
+  website       Website    @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+  scanId        String?
+  scan          Scan?      @relation(fields: [scanId], references: [id], onDelete: SetNull)
+  
+  url           String
+  errorType     String     // 404, 403, 500, broken_link, etc
+  statusCode    Int?
+  errorMessage  String?
+  
+  detectedAt    DateTime   @default(now())
+
+  @@index([websiteId])
+  @@index([scanId])
+  @@index([errorType])
+}
+
+model SeoMetrics {
+  id            String     @id @default(cuid())
+  websiteId     String     @unique
+  website       Website    @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+  
+  // SEO Scores
+  siteHealthScore Int     @default(0)  // 0-100
+  aiSearchHealth  Int     @default(0)  // 0-100
+  crawlability    Int     @default(0)  // 0-100
+  internalLinking Int    @default(0)  // 0-100
+  
+  // Statistics
+  totalPages      Int     @default(0)
+  pagesCrawled    Int     @default(0)
+  orphanPages     Int     @default(0)
+  pagesWithMissingMetaDescription Int @default(0)
+  pagesWithDuplicateTitle Int @default(0)
+  brokenInternalLinks Int @default(0)
+  
+  lastCalculated  DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model SecurityMetrics {
+  id                String     @id @default(cuid())
+  websiteId         String     @unique
+  website           Website    @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+  
+  // Security Scores
+  securityRating    Int        @default(0)  // 0-950 (UpGuard style)
+  httpsStatus       Boolean    @default(false)
+  sslCertificateValid Boolean  @default(false)
+  
+  // Security Headers
+  hasCSP            Boolean    @default(false)
+  hasXFrameOptions  Boolean    @default(false)
+  hasHSTS           Boolean    @default(false)
+  hasXContentType   Boolean    @default(false)
+  hasXXSSProtection Boolean    @default(false)
+  
+  // Issues
+  missingHeaders    Int        @default(0)
+  cveIssues         Int        @default(0)
+  
+  lastScanned       DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+}
+
+model Analytics {
+  id                String     @id @default(cuid())
+  websiteId         String     @unique
+  website           Website    @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+  
+  // Performance Metrics (from PageSpeed Insights)
+  performanceScore  Int        @default(0)   // 0-100
+  fcp               Int?                     // First Contentful Paint in ms
+  lcp               Int?                     // Largest Contentful Paint in ms
+  speedIndex        Int?                     // Speed Index in ms
+  cls               Float?                   // Cumulative Layout Shift
+  
+  // Traffic indicators
+  estimatedTraffic  Int        @default(0)
+  keywordCount      Int        @default(0)
+  backlinks         Int        @default(0)
+  referringDomains  Int        @default(0)
+  
+  lastUpdated       DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+}
+
+model AiInsight {
+  id                String     @id @default(cuid())
+  websiteId         String
+  
+  title             String
+  description       String
+  severity          String     @default("info") // info, warning, critical
+  category          String                       // seo, performance, security, crawlability
+  
+  createdAt         DateTime   @default(now())
+
+  @@index([websiteId])
+  @@index([severity])
+}
+
+model CompetitorDomain {
+  id                String     @id @default(cuid())
+  domain            String     @unique
+  notes             String?
+  
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+}

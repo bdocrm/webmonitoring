@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: websitemonitoring_db
+    environment:
+      POSTGRES_DB: websitemonitoring
+      POSTGRES_USER: developer
+      POSTGRES_PASSWORD: dev_password_123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - websitemonitoring
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: websitemonitoring_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@websitemonitoring.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    networks:
+      - websitemonitoring
+    depends_on:
+      - postgres
+
+networks:
+  websitemonitoring:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
