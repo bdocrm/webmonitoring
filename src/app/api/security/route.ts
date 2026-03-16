@@ -6,6 +6,9 @@ import {
   checkSecurityHeaders,
 } from '@/lib/security/rating';
 
+// Mark route as dynamic to prevent pre-rendering during build
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
