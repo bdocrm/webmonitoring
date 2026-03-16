@@ -5,6 +5,10 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ['cheerio', 'node-fetch'],
   },
+  onDemandEntries: {
+    maxInactiveAge: 60 * 1000,
+    pagesBufferLength: 5,
+  },
   headers: async () => {
     return [
       {
