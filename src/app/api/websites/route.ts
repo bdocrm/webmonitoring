@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+// Mark route as dynamic to prevent pre-rendering during build
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const websites = await prisma.website.findMany({
