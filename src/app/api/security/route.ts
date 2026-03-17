@@ -14,9 +14,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { websiteId } = body;
 
-    if (!websiteId) {
+    if (!websiteId || typeof websiteId !== 'string') {
       return NextResponse.json(
-        { error: 'websiteId is required' },
+        { error: 'Invalid websiteId. websiteId is required and must be a string' },
         { status: 400 }
       );
     }
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
 
     if (!website) {
       return NextResponse.json(
-        { error: 'Website not found' },
+        { error: 'Website not found. Please check the website ID' },
         { status: 404 }
       );
     }
@@ -63,10 +63,10 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(securityMetrics);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Security check error:', error);
     return NextResponse.json(
-      { error: 'Failed to check security' },
+      { error: 'Failed to check security. Please try again later.' },
       { status: 500 }
     );
   }
@@ -77,9 +77,9 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const websiteId = searchParams.get('websiteId');
 
-    if (!websiteId) {
+    if (!websiteId || typeof websiteId !== 'string') {
       return NextResponse.json(
-        { error: 'websiteId is required' },
+        { error: 'Invalid websiteId. websiteId is required and must be a string' },
         { status: 400 }
       );
     }
@@ -90,15 +90,16 @@ export async function GET(request: NextRequest) {
 
     if (!securityMetrics) {
       return NextResponse.json(
-        { error: 'Security metrics not found' },
+        { error: 'Security metrics not found. Please run a security scan first.' },
         { status: 404 }
       );
     }
 
     return NextResponse.json(securityMetrics);
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Error fetching security metrics:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch security metrics' },
+      { error: 'Failed to fetch security metrics. Please try again.' },
       { status: 500 }
     );
   }

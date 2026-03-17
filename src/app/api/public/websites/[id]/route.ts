@@ -9,8 +9,17 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
+    const { id } = params;
+
+    if (!id || typeof id !== 'string') {
+      return NextResponse.json(
+        { error: 'Invalid website ID. ID is required and must be a string' },
+        { status: 400 }
+      );
+    }
+
     const website = await prisma.website.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         seoMetrics: true,
         securityMetrics: true,
@@ -24,16 +33,16 @@ export async function GET(
 
     if (!website) {
       return NextResponse.json(
-        { error: 'Website not found' },
+        { error: 'Website dashboard not found. The shared link may have expired or be invalid.' },
         { status: 404 }
       );
     }
 
     return NextResponse.json(website);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching public website:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch website' },
+      { error: 'Failed to fetch website dashboard. Please try again later.' },
       { status: 500 }
     );
   }

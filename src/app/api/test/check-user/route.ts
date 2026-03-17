@@ -15,7 +15,11 @@ export async function GET() {
     }
 
     return Response.json({ status: 'User exists', user });
-  } catch (error) {
-    return Response.json({ error: String(error) }, { status: 500 });
+  } catch (error: any) {
+    console.error('Error checking user:', error);
+    return Response.json(
+      { error: 'Failed to check user. Please try again.' },
+      { status: 500 }
+    );
   }
 }

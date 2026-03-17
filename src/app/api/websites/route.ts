@@ -6,9 +6,6 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    console.log('📡 Fetching websites...');
-    
-    // Simple query first to debug
     const websites = await prisma.website.findMany({
       include: {
         seoMetrics: true,
@@ -16,20 +13,11 @@ export async function GET() {
       },
     });
     
-    console.log(`✅ Found ${websites.length} websites`);
     return NextResponse.json(websites);
-  } catch (error) {
-    console.error('❌ API /api/websites GET error:', error);
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    const stack = error instanceof Error ? error.stack : null;
-    
+  } catch (error: any) {
+    console.error('Error fetching websites:', error);
     return NextResponse.json(
-      { 
-        error: 'Failed to fetch websites', 
-        message: errorMessage,
-        stack: process.env.NODE_ENV === 'development' ? stack : undefined,
-        timestamp: new Date().toISOString(),
-      },
+      { error: 'Failed to fetch websites. Please try again.' },
       { status: 500 }
     );
   }
@@ -40,18 +28,32 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { domain, displayName, description } = body;
 
-    if (!domain || !displayName) {
+    if (!domain || typeof domain !== 'string' || !domain.trim()) {
       return NextResponse.json(
-        { error: 'Domain and displayName are required' },
+        { error: 'Invalid domain. Domain is required and must be a non-empty string' },
+        { status: 400 }
+      );
+    }
+
+    if (!displayName || typeof displayName !== 'string' || !displayName.trim()) {
+      return NextResponse.json(
+        { error: 'Invalid displayName. Display name is required and must be a non-empty string' },
+        { status: 400 }
+      );
+    }
+
+    if (description && typeof description !== 'string') {
+      return NextResponse.json(
+        { error: 'Invalid description. Description must be a string' },
         { status: 400 }
       );
     }
 
     const website = await prisma.website.create({
       data: {
-        domain,
-        displayName,
-        description,
+        domain: domain.trim(),
+        displayName: displayName.trim(),
+        description: description?.trim(),
         seoMetrics: {
           create: {},
         },
@@ -69,9 +71,10 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(website, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Error creating website:', error);
     return NextResponse.json(
-      { error: 'Failed to create website' },
+      { error: 'Failed to create website. Please try again.' },
       { status: 500 }
     );
   }

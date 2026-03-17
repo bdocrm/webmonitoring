@@ -15,9 +15,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { websiteId } = body;
 
-    if (!websiteId) {
+    if (!websiteId || typeof websiteId !== 'string') {
       return NextResponse.json(
-        { error: 'websiteId is required' },
+        { error: 'Invalid websiteId. websiteId is required and must be a string' },
         { status: 400 }
       );
     }
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
 
     if (pages.length === 0) {
       return NextResponse.json(
-        { error: 'No pages found for this website' },
+        { error: 'No pages found for this website. Please run a crawler scan first.' },
         { status: 400 }
       );
     }
@@ -101,10 +101,10 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(seoMetrics);
-  } catch (error) {
+  } catch (error: any) {
     console.error('SEO analysis error:', error);
     return NextResponse.json(
-      { error: 'Failed to analyze SEO' },
+      { error: 'Failed to analyze SEO. Please try again later.' },
       { status: 500 }
     );
   }
@@ -115,9 +115,9 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const websiteId = searchParams.get('websiteId');
 
-    if (!websiteId) {
+    if (!websiteId || typeof websiteId !== 'string') {
       return NextResponse.json(
-        { error: 'websiteId is required' },
+        { error: 'Invalid websiteId. websiteId is required and must be a string' },
         { status: 400 }
       );
     }
@@ -128,15 +128,16 @@ export async function GET(request: NextRequest) {
 
     if (!seoMetrics) {
       return NextResponse.json(
-        { error: 'SEO metrics not found' },
+        { error: 'SEO metrics not found. Please run an SEO analysis first.' },
         { status: 404 }
       );
     }
 
     return NextResponse.json(seoMetrics);
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Error fetching SEO metrics:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch SEO metrics' },
+      { error: 'Failed to fetch SEO metrics. Please try again.' },
       { status: 500 }
     );
   }

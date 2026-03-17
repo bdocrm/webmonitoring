@@ -10,9 +10,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { websiteId } = body;
 
-    if (!websiteId) {
+    if (!websiteId || typeof websiteId !== 'string') {
       return NextResponse.json(
-        { error: 'websiteId is required' },
+        { error: 'Invalid websiteId. websiteId is required and must be a string' },
         { status: 400 }
       );
     }
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
 
     if (!website) {
       return NextResponse.json(
-        { error: 'Website not found' },
+        { error: 'Website not found. Please check the website ID' },
         { status: 404 }
       );
     }
@@ -32,10 +32,10 @@ export async function POST(request: NextRequest) {
     const scan = await crawlWebsite(website.domain, websiteId);
 
     return NextResponse.json(scan, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Crawler error:', error);
     return NextResponse.json(
-      { error: 'Failed to start crawler' },
+      { error: 'Failed to start crawler. Please try again later.' },
       { status: 500 }
     );
   }
@@ -46,9 +46,9 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const websiteId = searchParams.get('websiteId');
 
-    if (!websiteId) {
+    if (!websiteId || typeof websiteId !== 'string') {
       return NextResponse.json(
-        { error: 'websiteId is required' },
+        { error: 'Invalid websiteId. websiteId is required and must be a string' },
         { status: 400 }
       );
     }
@@ -68,9 +68,10 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json(scans);
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Error fetching scans:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch scans' },
+      { error: 'Failed to fetch scans. Please try again.' },
       { status: 500 }
     );
   }
