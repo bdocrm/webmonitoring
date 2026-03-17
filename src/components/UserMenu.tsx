@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { signOut, useSession } from 'next-auth/react';
-import { LogOut, User, ChevronDown } from 'lucide-react';
+import { LogOut, ChevronDown } from 'lucide-react';
 
 export function UserMenu() {
   const { data: session } = useSession();

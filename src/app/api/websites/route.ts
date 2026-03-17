@@ -7,22 +7,27 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     console.log('📡 Fetching websites...');
+    
+    // Simple query first to debug
     const websites = await prisma.website.findMany({
       include: {
         seoMetrics: true,
         securityMetrics: true,
-        analytics: true,
       },
     });
+    
     console.log(`✅ Found ${websites.length} websites`);
     return NextResponse.json(websites);
   } catch (error) {
     console.error('❌ API /api/websites GET error:', error);
     const errorMessage = error instanceof Error ? error.message : String(error);
+    const stack = error instanceof Error ? error.stack : null;
+    
     return NextResponse.json(
       { 
         error: 'Failed to fetch websites', 
-        details: errorMessage,
+        message: errorMessage,
+        stack: process.env.NODE_ENV === 'development' ? stack : undefined,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
