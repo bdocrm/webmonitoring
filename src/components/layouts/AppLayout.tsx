@@ -16,6 +16,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { UserMenu } from '@/components/UserMenu';
 
 const navItems = [
   { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -106,7 +107,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
             <Menu className="w-5 h-5" />
           </button>
           <h1 className="text-lg font-semibold">WebSite Monitoring System</h1>
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600" />
+          <UserMenu />
         </header>
 
         {/* Content */}

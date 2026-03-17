@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { AlertCircle, CheckCircle, Loader2, Shield, Zap, Search, Download, Share2, Mail, Clock } from 'lucide-react';
 import { useParams } from 'next/navigation';
 
+// This is a public page - no authentication required
+
 interface Website {
   id: string;
   domain: string;
@@ -43,7 +45,7 @@ export default function PublicDashboard() {
   useEffect(() => {
     const fetchWebsite = async () => {
       try {
-        const res = await fetch(`/api/websites/${params.id}`);
+        const res = await fetch(`/api/public/websites/${params.id}`);
         if (res.ok) {
           const data = await res.json();
           setWebsite(data);
