@@ -60,17 +60,17 @@ const authOptions: NextAuthOptions = {
         }
       },
     }),
-    // OAuth Providers (optional)
-    ...(process.env.GOOGLE_CLIENT_ID ? [
+    // OAuth Providers (optional - only if both ID and SECRET are set)
+    ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET ? [
       GoogleProvider({
         clientId: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       }),
     ] : []),
-    ...(process.env.GITHUB_ID ? [
+    ...(process.env.GITHUB_ID && process.env.GITHUB_SECRET ? [
       GitHubProvider({
         clientId: process.env.GITHUB_ID,
-        clientSecret: process.env.GITHUB_SECRET || '',
+        clientSecret: process.env.GITHUB_SECRET,
       }),
     ] : []),
   ],
@@ -102,19 +102,20 @@ const authOptions: NextAuthOptions = {
       return session;
     },
     // Handle OAuth user creation
-    async signIn({ user, account, profile }) {
-      if (account?.provider === 'google' || account?.provider === 'github') {
+    async signIn({ user, profile }) {
+      if (user?.email && profile?.email) {
         try {
           const existingUser = await prisma.user.findUnique({
             where: { email: user.email },
           });
 
-          if (!existingUser && profile?.email) {
+          if (!existingUser) {
             console.log('✨ Creating new OAuth user:', profile.email);
             await prisma.user.create({
               data: {
                 email: profile.email,
-                name: user.name || profile?.name || 'OAuth User',
+                name: user.name || profile.name || 'OAuth User',
+                password: '', // OAuth users have no password
                 role: 'user',
               },
             });
@@ -137,7 +138,7 @@ const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === 'development',
   events: {
-    async signIn({ user, account, profile, isNewUser }) {
+    async signIn({ user, isNewUser }) {
       console.log(`✅ User signed in: ${user?.email} (New: ${isNewUser})`);
     },
     async signOut({ token }) {
@@ -148,4 +149,4 @@ const authOptions: NextAuthOptions = {
 
 const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST };
+export { handler as GET, handler as POST, authOptions };

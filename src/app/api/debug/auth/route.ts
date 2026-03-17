@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(request: Request) {
+export async function GET() {
   // Only enable in development
   if (process.env.NODE_ENV !== 'development') {
     return Response.json(
