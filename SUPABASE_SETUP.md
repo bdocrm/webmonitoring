@@ -122,9 +122,7 @@ This opens **Prisma Studio** at http://localhost:5555 where you can:
 npm run dev
 ```
 
-Open http://localhost:3000 and login with:
-- **Email**: `admin@websitemonitoring.com`
-- **Password**: `admin123`
+Open http://localhost:3000 and login with your admin credentials from `.env.local` (ADMIN_EMAIL and ADMIN_PASSWORD)
 
 ## Monitoring Your Database
 

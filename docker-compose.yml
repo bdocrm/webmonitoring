@@ -19,8 +19,8 @@ services:
     image: dpage/pgadmin4:latest
     container_name: websitemonitoring_pgadmin
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@websitemonitoring.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@example.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
     ports:
       - "5050:80"
     networks:

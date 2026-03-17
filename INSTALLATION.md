@@ -88,9 +88,7 @@ npm run dev
 #### 9. Open browser
 Navigate to http://localhost:3000
 
-Default login:
-- Email: `admin@websitemonitoring.com`
-- Password: `admin123`
+Use the admin credentials you configured in `.env.local` (ADMIN_EMAIL and ADMIN_PASSWORD)
 
 ## Supabase Features (Bonus!)
 
@@ -165,8 +163,8 @@ docker-compose down
 ### Accessing PgAdmin
 
 - URL: http://localhost:5050
-- Email: admin@websitemonitoring.com
-- Password: admin
+- Email: Check your `.env.local` for PGADMIN_DEFAULT_EMAIL
+- Password: Check your `.env.local` for PGADMIN_DEFAULT_PASSWORD
 
 ### Prisma Studio
 

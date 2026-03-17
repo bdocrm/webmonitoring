@@ -66,8 +66,7 @@ echo    3. Seed database: npm run db:seed
 echo    4. Start dev server: npm run dev
 echo    5. Open http://localhost:3000 in your browser
 echo.
-echo 📚 Default admin credentials:
-echo    Email: admin@websitemonitoring.com
-echo    Password: admin123
+echo � A default admin user will be created during seeding.
+echo    Set your own credentials in .env.local (ADMIN_EMAIL, ADMIN_PASSWORD)
 echo.
 pause

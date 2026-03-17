@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 export default function SettingsPage() {
   const [settings, setSettings] = React.useState({
     siteName: 'WebSiteMonitoringMo!',
-    email: 'admin@websitemonitoring.com',
+    email: '',
     scanInterval: 24,
     maxPages: 100,
     crawlTimeout: 30,

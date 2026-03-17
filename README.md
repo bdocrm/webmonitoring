@@ -203,9 +203,7 @@ npm run dev
 6. **Access the application**
    Open [http://localhost:3000](http://localhost:3000) in your browser
 
-   Default login:
-   - Email: `admin@websitemonitoring.com`
-   - Password: `admin123`
+   Use the admin credentials you set in `.env.local` (ADMIN_EMAIL and ADMIN_PASSWORD)
 
 ## 📈 Dashboard Metrics
 

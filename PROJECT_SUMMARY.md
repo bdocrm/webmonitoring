@@ -247,8 +247,8 @@ WebsiteMonitoringMo/
 
 **Docker Configuration**
 - `docker-compose.yml` - PostgreSQL and PgAdmin setup
-- Pre-configured with sample credentials
 - Volume persistence for data
+- Configured via environment variables in .env.local
 
 **Setup Scripts**
 - `setup.sh` - Automated setup for Linux/macOS
@@ -355,7 +355,7 @@ npm run db:seed
 npm run dev
 
 # 6. Open http://localhost:3000
-# Login: admin@websitemonitoring.com / admin123
+# Login with your admin credentials set in .env.local
 ```
 
 ### 3. Available Commands

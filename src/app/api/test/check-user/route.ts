@@ -4,8 +4,9 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@example.com';
     const user = await prisma.user.findUnique({
-      where: { email: 'admin@websitemonitoring.com' },
+      where: { email: adminEmail },
       select: { email: true, id: true },
     });
 

@@ -32,8 +32,7 @@ npm run dev
 
 ### 5. Open in Browser
 - URL: http://localhost:3000
-- Email: admin@websitemonitoring.com
-- Password: admin123
+- Use the admin credentials you set in `.env.local` (ADMIN_EMAIL and ADMIN_PASSWORD)
 
 **No Docker needed!** ✨
 

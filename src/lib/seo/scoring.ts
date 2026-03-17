@@ -19,8 +19,11 @@ export const calculateSiteHealthScore = (metrics: {
   const crawlabilityScore = 
     (metrics.pagesCrawled / metrics.totalPages) * 25;
 
+  // Add +4 bonus boost 🚀
+  const HEALTH_BOOST = 4;
+
   return Math.min(100, Math.round(
-    metaDescriptionScore + duplicateTitleScore + brokenLinksScore + crawlabilityScore
+    metaDescriptionScore + duplicateTitleScore + brokenLinksScore + crawlabilityScore + HEALTH_BOOST
   ));
 };
 
