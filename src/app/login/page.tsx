@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { signIn } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { AlertCircle, Loader2, LogIn, Mail, Lock } from 'lucide-react';
+import { LoginErrorHandler } from './error-handler';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -12,22 +13,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
-
-  // Parse error from URL
-  useEffect(() => {
-    const errorParam = searchParams.get('error');
-    if (errorParam) {
-      const errorMessages: Record<string, string> = {
-        CredentialsSignin: 'Invalid email or password. Please try again.',
-        InvalidEmail: 'Please enter a valid email address.',
-        NoUser: 'No account found with that email.',
-        InvalidPassword: 'Incorrect password.',
-        SessionExpired: 'Your session has expired. Please log in again.',
-      };
-      setError(errorMessages[errorParam] || 'Login failed. Please try again.');
-    }
-  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,6 +78,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
+      <LoginErrorHandler onError={setError} />
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-blue-500/10 to-transparent rounded-full blur-3xl animate-pulse"></div>
