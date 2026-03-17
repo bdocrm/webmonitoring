@@ -5,7 +5,7 @@ import GitHubProvider from 'next-auth/providers/github';
 import { prisma } from '@/lib/prisma';
 import bcryptjs from 'bcryptjs';
 
-const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -149,4 +149,4 @@ const authOptions: NextAuthOptions = {
 
 const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST, authOptions };
+export { handler as GET, handler as POST };
