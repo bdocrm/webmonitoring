@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { AlertCircle, CheckCircle, Loader2, Shield, Zap, Search, Download, Share2, Mail, Clock } from 'lucide-react';
 import { useParams } from 'next/navigation';
+import Tooltip from '@/components/ui/tooltip';
 
 // This is a public page - no authentication required
 
@@ -170,7 +171,9 @@ export default function PublicDashboard() {
               <div className="p-3 bg-white/10 rounded-xl border border-white/20">
                 <Search className="w-6 h-6 text-blue-400" />
               </div>
-              <span className="text-white/80 font-medium">Site Health</span>
+              <Tooltip content="Overall SEO health score. 80+: Excellent, 60-79: Good, Below 60: Needs improvement">
+                <span className="text-white/80 font-medium cursor-help">Site Health</span>
+              </Tooltip>
             </div>
             <div className={`text-5xl font-bold ${getScoreColor(seo.siteHealthScore)} animate-glow-pulse`}>
               {seo.siteHealthScore}%
@@ -189,7 +192,9 @@ export default function PublicDashboard() {
               <div className="p-3 bg-white/10 rounded-xl border border-white/20">
                 <Shield className="w-6 h-6 text-purple-400" />
               </div>
-              <span className="text-white/80 font-medium">Security Rating</span>
+              <Tooltip content="Security rating out of 950. Based on SSL, HTTPS, CSP, HSTS and other security headers. Higher is better.">
+                <span className="text-white/80 font-medium cursor-help">Security Rating</span>
+              </Tooltip>
             </div>
             <div className={`text-5xl font-bold ${getScoreColor(security.securityRating / 9.5)} animate-glow-pulse`}>
               {security.securityRating}
@@ -209,7 +214,9 @@ export default function PublicDashboard() {
               <div className="p-3 bg-white/10 rounded-xl border border-white/20">
                 <Zap className="w-6 h-6 text-yellow-400" />
               </div>
-              <span className="text-white/80 font-medium">Performance</span>
+              <Tooltip content="Page speed score (0-100). Based on Core Web Vitals: FCP, LCP, CLS, and speed index. 80+: Excellent, 60-79: Good, Below 60: Needs work">
+                <span className="text-white/80 font-medium cursor-help">Performance</span>
+              </Tooltip>
             </div>
             <div className={`text-5xl font-bold ${getScoreColor(perf.performanceScore)} animate-glow-pulse`}>
               {perf.performanceScore}
@@ -227,19 +234,27 @@ export default function PublicDashboard() {
         {/* Detailed Metrics Grid with Staggered Animation */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 hover:border-blue-400/30 transition-colors animate-slide-up-1 animate-slide-up">
-            <p className="text-white/60 text-sm">AI Search Health</p>
+            <Tooltip content="AI model's assessment of your site's SEO health. Higher scores indicate better search visibility">
+              <p className="text-white/60 text-sm cursor-help">AI Search Health</p>
+            </Tooltip>
             <p className={`text-3xl font-bold mt-2 ${getScoreColor(seo.aiSearchHealth)}`}>{seo.aiSearchHealth}%</p>
           </div>
           <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 hover:border-blue-400/30 transition-colors animate-slide-up-2 animate-slide-up">
-            <p className="text-white/60 text-sm">Crawlability</p>
+            <Tooltip content="How easily search engines can crawl and index your website. Higher is better.">
+              <p className="text-white/60 text-sm cursor-help">Crawlability</p>
+            </Tooltip>
             <p className={`text-3xl font-bold mt-2 ${getScoreColor(seo.crawlability)}`}>{seo.crawlability}%</p>
           </div>
           <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 hover:border-blue-400/30 transition-colors animate-slide-up-3 animate-slide-up">
-            <p className="text-white/60 text-sm">Internal Linking</p>
+            <Tooltip content="Quality and structure of links within your website. Helps distribute page authority and improves navigation.">
+              <p className="text-white/60 text-sm cursor-help">Internal Linking</p>
+            </Tooltip>
             <p className={`text-3xl font-bold mt-2 ${getScoreColor(seo.internalLinking)}`}>{seo.internalLinking}%</p>
           </div>
           <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 hover:border-blue-400/30 transition-colors animate-slide-up-4 animate-slide-up">
-            <p className="text-white/60 text-sm">Pages Crawled</p>
+            <Tooltip content="Number of pages successfully indexed by search engines">
+              <p className="text-white/60 text-sm cursor-help">Pages Crawled</p>
+            </Tooltip>
             <p className="text-3xl font-bold mt-2 text-blue-400">{seo.pagesCrawled} / {seo.totalPages}</p>
           </div>
         </div>
@@ -257,7 +272,9 @@ export default function PublicDashboard() {
               ) : (
                 <AlertCircle className="w-5 h-5 text-red-400" />
               )}
-              <span className="text-white/80">HTTPS</span>
+              <Tooltip content="Secure connection protocol. Essential for protecting user data in transit.">
+                <span className="text-white/80 cursor-help">HTTPS</span>
+              </Tooltip>
             </div>
             <div className="flex items-center gap-2">
               {'sslCertificateValid' in security && security.sslCertificateValid ? (
@@ -265,7 +282,9 @@ export default function PublicDashboard() {
               ) : (
                 <AlertCircle className="w-5 h-5 text-red-400" />
               )}
-              <span className="text-white/80">SSL Certificate</span>
+              <Tooltip content="Valid SSL certificate enables HTTPS and ensures encrypted communication with visitors.">
+                <span className="text-white/80 cursor-help">SSL Certificate</span>
+              </Tooltip>
             </div>
             <div className="flex items-center gap-2">
               {'hasCSP' in security && security.hasCSP ? (
@@ -273,7 +292,9 @@ export default function PublicDashboard() {
               ) : (
                 <AlertCircle className="w-5 h-5 text-yellow-400" />
               )}
-              <span className="text-white/80">CSP Header</span>
+              <Tooltip content="Content Security Policy prevents XSS attacks by controlling resource loading.">
+                <span className="text-white/80 cursor-help">CSP Header</span>
+              </Tooltip>
             </div>
             <div className="flex items-center gap-2">
               {'hasHSTS' in security && security.hasHSTS ? (
@@ -281,7 +302,9 @@ export default function PublicDashboard() {
               ) : (
                 <AlertCircle className="w-5 h-5 text-yellow-400" />
               )}
-              <span className="text-white/80">HSTS</span>
+              <Tooltip content="HTTP Strict Transport Security forces HTTPS connections for enhanced security.">
+                <span className="text-white/80 cursor-help">HSTS</span>
+              </Tooltip>
             </div>
           </div>
         </div>
