@@ -1,51 +1,60 @@
-﻿@tailwind base;
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --background: 60 100% 99%;
+    --foreground: 0 0% 13%;
+    --card: 60 100% 99%;
+    --card-foreground: 0 0% 13%;
+    --popover: 60 100% 99%;
+    --popover-foreground: 0 0% 13%;
+    --primary: 245 80% 26%;
+    --primary-foreground: 60 100% 99%;
+    --secondary: 208 65% 93%;
+    --secondary-foreground: 245 80% 26%;
+    --muted: 208 30% 93%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 26 87% 53%;
+    --accent-foreground: 60 100% 99%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 217.2 91.2% 59.8%;
+    --destructive-foreground: 60 100% 99%;
+    --border: 208 30% 88%;
+    --input: 208 30% 88%;
+    --ring: 245 80% 26%;
     --radius: 0.75rem;
+
+    /* Brand color tokens */
+    --brand-navy: 245 80% 26%;
+    --brand-tufts: 208 65% 55%;
+    --brand-orange: 26 87% 53%;
+    --brand-powder: 60 100% 99%;
+    --brand-black: 0 0% 13%;
   }
 
   .dark {
-    --background: 224 71% 4%;
-    --foreground: 213 31% 91%;
-    --card: 224 71% 6%;
-    --card-foreground: 213 31% 91%;
-    --popover: 224 71% 6%;
-    --popover-foreground: 213 31% 91%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 222.2 47.4% 11.2%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 223 47% 11%;
-    --muted-foreground: 215.4 16.3% 56.9%;
-    --accent: 216 34% 17%;
-    --accent-foreground: 210 40% 98%;
+    --background: 0 0% 10%;
+    --foreground: 60 20% 92%;
+    --card: 0 0% 12%;
+    --card-foreground: 60 20% 92%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 60 20% 92%;
+    --primary: 208 65% 55%;
+    --primary-foreground: 60 100% 99%;
+    --secondary: 245 40% 18%;
+    --secondary-foreground: 60 20% 92%;
+    --muted: 0 0% 18%;
+    --muted-foreground: 208 20% 60%;
+    --accent: 26 87% 53%;
+    --accent-foreground: 60 100% 99%;
     --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 216 34% 17%;
-    --input: 216 34% 17%;
-    --ring: 224 76% 48%;
+    --destructive-foreground: 60 100% 99%;
+    --border: 245 20% 22%;
+    --input: 245 20% 22%;
+    --ring: 208 65% 55%;
   }
 }
 
@@ -58,7 +67,11 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
+    font-family: 'Open Sans', var(--font-sans), system-ui, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cardo', var(--font-sans), serif;
   }
 }
 
@@ -68,16 +81,17 @@
   }
   
   .gradient-text {
-    @apply bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent;
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #160D76, #4094d9, #F08530);
   }
   
   .glow {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3),
-                0 0 40px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 20px rgba(22, 13, 118, 0.3),
+                0 0 40px rgba(64, 148, 217, 0.1);
   }
   
   .glass {
-    @apply bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl;
+    @apply bg-white/80 dark:bg-[#222222]/80 backdrop-blur-xl;
   }
 }
 
@@ -155,12 +169,12 @@
 
   @keyframes glowPulse {
     0%, 100% {
-      box-shadow: 0 0 20px rgba(59, 130, 246, 0.3),
-                  0 0 40px rgba(59, 130, 246, 0.1);
+      box-shadow: 0 0 20px rgba(22, 13, 118, 0.3),
+                  0 0 40px rgba(64, 148, 217, 0.1);
     }
     50% {
-      box-shadow: 0 0 40px rgba(59, 130, 246, 0.5),
-                  0 0 80px rgba(59, 130, 246, 0.2);
+      box-shadow: 0 0 40px rgba(22, 13, 118, 0.5),
+                  0 0 80px rgba(64, 148, 217, 0.2);
     }
   }
 

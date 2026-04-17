@@ -78,26 +78,26 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-brand-navy via-brand-navy/90 to-brand-black flex items-center justify-center p-4 relative overflow-hidden">
       <Suspense fallback={null}>
         <LoginErrorHandler onError={setError} />
       </Suspense>
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-blue-500/10 to-transparent rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-purple-500/10 to-transparent rounded-full blur-3xl animate-pulse animation-delay-2000"></div>
+        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-brand-tufts/10 to-transparent rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-brand-orange/10 to-transparent rounded-full blur-3xl animate-pulse animation-delay-2000"></div>
       </div>
 
       {/* Login Card */}
       <div className="relative w-full max-w-md z-10">
-        <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 shadow-2xl">
+        <div className="bg-brand-black/50 backdrop-blur-xl border border-brand-tufts/20 rounded-2xl p-8 shadow-2xl">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-brand-navy to-brand-tufts rounded-full mb-4">
               <LogIn className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2">Website Monitor</h1>
-            <p className="text-slate-300 text-sm">Sign in to access your dashboard</p>
+            <h1 className="text-3xl font-bold text-brand-powder font-heading mb-2">Website Monitor</h1>
+            <p className="text-brand-powder/60 text-sm">Sign in to access your dashboard</p>
           </div>
 
           {/* Error Alert */}
@@ -114,7 +114,7 @@ export default function LoginPage() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="email" className="text-sm font-medium text-slate-200 mb-2 flex items-center gap-2">
+              <label htmlFor="email" className="text-sm font-medium text-brand-powder/80 mb-2 flex items-center gap-2">
                 <Mail className="w-4 h-4" />
                 Email Address
               </label>
@@ -124,14 +124,14 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
-                className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
+                className="w-full px-4 py-3 bg-brand-navy/30 border border-brand-tufts/30 rounded-lg text-brand-powder placeholder-brand-powder/30 focus:outline-none focus:border-brand-tufts focus:ring-1 focus:ring-brand-tufts transition"
                 disabled={loading}
                 autoComplete="email"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="text-sm font-medium text-slate-200 mb-2 flex items-center gap-2">
+              <label htmlFor="password" className="text-sm font-medium text-brand-powder/80 mb-2 flex items-center gap-2">
                 <Lock className="w-4 h-4" />
                 Password
               </label>
@@ -141,7 +141,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
+                className="w-full px-4 py-3 bg-brand-navy/30 border border-brand-tufts/30 rounded-lg text-brand-powder placeholder-brand-powder/30 focus:outline-none focus:border-brand-tufts focus:ring-1 focus:ring-brand-tufts transition"
                 disabled={loading}
                 autoComplete="current-password"
               />
@@ -154,10 +154,10 @@ export default function LoginPage() {
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                className="w-4 h-4 bg-slate-700 border border-slate-600 rounded cursor-pointer"
+                className="w-4 h-4 bg-brand-navy border border-brand-tufts/30 rounded cursor-pointer accent-brand-tufts"
                 disabled={loading}
               />
-              <label htmlFor="remember" className="text-sm text-slate-300 cursor-pointer">
+              <label htmlFor="remember" className="text-sm text-brand-powder/60 cursor-pointer">
                 Remember my email
               </label>
             </div>
@@ -166,7 +166,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition flex items-center justify-center gap-2 mt-6 transform hover:scale-105 active:scale-95"
+              className="w-full py-3 bg-gradient-to-r from-brand-navy to-brand-tufts hover:from-brand-navy/90 hover:to-brand-tufts/90 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition flex items-center justify-center gap-2 mt-6 transform hover:scale-105 active:scale-95"
             >
               {loading ? (
                 <>
@@ -185,22 +185,22 @@ export default function LoginPage() {
           {/* Divider */}
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-600"></div>
+              <div className="w-full border-t border-brand-tufts/20"></div>
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="px-2 text-slate-400 bg-slate-800/50">Debug Info</span>
+              <span className="px-2 text-brand-powder/40 bg-brand-black/50">Debug Info</span>
             </div>
           </div>
 
           {/* Debug Info */}
-          <div className="bg-slate-900/50 rounded p-3 text-xs text-slate-400 space-y-1 mb-4">
+          <div className="bg-brand-navy/20 rounded p-3 text-xs text-brand-powder/40 space-y-1 mb-4">
             <p>💡 Check browser console for detailed logs</p>
             <p>🔍 Error details will help troubleshoot issues</p>
             <p>✅ NEXTAUTH_SECRET must be set in .env.local</p>
           </div>
 
           {/* Footer */}
-          <p className="text-center text-slate-400 text-xs">
+          <p className="text-center text-brand-powder/30 text-xs">
             Website Monitoring System • v1.0+Enhanced
           </p>
         </div>

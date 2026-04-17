@@ -27,7 +27,7 @@ export default function SEOPage() {
       <div className="space-y-8">
         {/* Page Header */}
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">SEO Analysis</h1>
+          <h1 className="text-3xl font-bold tracking-tight font-heading">SEO Analysis</h1>
           <p className="text-muted-foreground mt-2">
             Monitor your website&apos;s SEO health and performance
           </p>
@@ -81,7 +81,7 @@ export default function SEOPage() {
                   <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
                   <YAxis />
                   <Tooltip />
-                  <Bar dataKey="value" fill="#ef4444" name="Count" />
+                  <Bar dataKey="value" fill="#F08530" name="Count" />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
@@ -99,7 +99,7 @@ export default function SEOPage() {
                   <XAxis dataKey="depth" />
                   <YAxis />
                   <Tooltip />
-                  <Bar dataKey="pages" fill="#3b82f6" name="Pages" />
+                  <Bar dataKey="pages" fill="#4094d9" name="Pages" />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>

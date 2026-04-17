@@ -29,7 +29,7 @@ const pageSpeedData = [
   { name: 'Slow (> 4s)', value: 46 },
 ];
 
-const COLORS = ['#10b981', '#f59e0b', '#ef4444'];
+const COLORS = ['#10b981', '#F08530', '#ef4444'];
 
 export default function PerformancePage() {
   return (
@@ -37,7 +37,7 @@ export default function PerformancePage() {
       <div className="space-y-8">
         {/* Page Header */}
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Performance</h1>
+          <h1 className="text-3xl font-bold tracking-tight font-heading">Performance</h1>
           <p className="text-muted-foreground mt-2">
             Track your website&apos;s performance metrics and optimization opportunities
           </p>
@@ -92,7 +92,7 @@ export default function PerformancePage() {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="value" fill="#3b82f6" name="Current" />
+                  <Bar dataKey="value" fill="#4094d9" name="Current" />
                   <Bar dataKey="target" fill="#10b981" name="Target" />
                 </BarChart>
               </ResponsiveContainer>
@@ -114,7 +114,7 @@ export default function PerformancePage() {
                   <Line
                     type="monotone"
                     dataKey="score"
-                    stroke="#3b82f6"
+                    stroke="#4094d9"
                     strokeWidth={2}
                   />
                 </LineChart>

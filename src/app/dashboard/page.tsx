@@ -146,7 +146,7 @@ export default function Dashboard() {
     switch (type) {
       case 'success': return 'bg-green-500 text-white';
       case 'error': return 'bg-red-500 text-white';
-      case 'info': return 'bg-blue-500 text-white';
+      case 'info': return 'bg-brand-tufts text-white';
     }
   };
 
@@ -222,7 +222,7 @@ export default function Dashboard() {
         {/* Page Header with Website Selector */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+            <h1 className="text-3xl font-bold tracking-tight font-heading">Dashboard</h1>
             <p className="text-muted-foreground mt-2">
               Monitor your website health, performance, and security in real-time
             </p>
@@ -251,7 +251,7 @@ export default function Dashboard() {
                   <Button
                     onClick={() => handleScan(selectedWebsite.id)}
                     disabled={scanning === selectedWebsite.id}
-                    className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
+                    className="bg-gradient-to-r from-brand-navy to-brand-tufts hover:from-brand-navy/90 hover:to-brand-tufts/90"
                   >
                     {scanning === selectedWebsite.id ? (
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -263,7 +263,7 @@ export default function Dashboard() {
                   <Button
                     variant="outline"
                     onClick={() => setShowShareModal(true)}
-                    className="border-purple-500/50 hover:bg-purple-500/10"
+                    className="border-brand-orange/50 hover:bg-brand-orange/10"
                   >
                     <Share2 className="w-4 h-4 mr-2" />
                     Share
@@ -333,16 +333,16 @@ export default function Dashboard() {
         {selectedWebsite && (
           <>
             {/* Current Website Info */}
-            <Card className="bg-gradient-to-r from-blue-600/20 via-purple-600/15 to-pink-600/20 border-blue-500/30 shadow-lg shadow-blue-500/10 overflow-hidden relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5"></div>
+            <Card className="bg-gradient-to-r from-brand-navy/20 via-brand-tufts/15 to-brand-orange/10 border-brand-tufts/30 shadow-lg shadow-brand-navy/10 overflow-hidden relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/5 to-brand-tufts/5"></div>
               <CardContent className="pt-6 relative">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
-                    <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-lg">
+                    <div className="p-3 bg-gradient-to-br from-brand-navy to-brand-tufts rounded-xl shadow-lg">
                       <Globe className="w-8 h-8 text-white" />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{selectedWebsite.displayName}</h2>
+                      <h2 className="text-2xl font-bold font-heading bg-gradient-to-r from-brand-navy to-brand-tufts bg-clip-text text-transparent">{selectedWebsite.displayName}</h2>
                       <p className="text-muted-foreground flex items-center gap-2">
                         <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                         {selectedWebsite.domain}
@@ -478,7 +478,7 @@ export default function Dashboard() {
                           <AlertCircle className="w-5 h-5 text-yellow-500" />
                         )}
                         {insight.severity === 'info' && (
-                          <CheckCircle className="w-5 h-5 text-blue-500" />
+                          <CheckCircle className="w-5 h-5 text-brand-tufts" />
                         )}
                       </div>
                       <div>

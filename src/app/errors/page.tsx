@@ -62,7 +62,7 @@ export default function ErrorsPage() {
   const [selectedType, setSelectedType] = useState<string | null>(null);
 
   const getErrorColor = (statusCode: number) => {
-    if (statusCode === 404) return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
+    if (statusCode === 404) return 'bg-brand-tufts/10 text-brand-tufts dark:bg-brand-tufts/20 dark:text-brand-tufts';
     if (statusCode === 403) return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
     if (statusCode >= 500)
       return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
@@ -88,7 +88,7 @@ export default function ErrorsPage() {
       <div className="space-y-8">
         {/* Page Header */}
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Errors</h1>
+          <h1 className="text-3xl font-bold tracking-tight font-heading">Errors</h1>
           <p className="text-muted-foreground mt-2">
             Track and analyze HTTP errors on your website
           </p>

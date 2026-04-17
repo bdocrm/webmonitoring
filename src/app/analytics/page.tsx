@@ -98,7 +98,7 @@ export default function AnalyticsPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
+            <h1 className="text-3xl font-bold tracking-tight font-heading flex items-center gap-2">
               <TrendingUp className="w-8 h-8" />
               Analytics & Trends
             </h1>
@@ -119,7 +119,7 @@ export default function AnalyticsPage() {
               <select
                 value={selectedWebsiteId}
                 onChange={(e) => setSelectedWebsiteId(e.target.value)}
-                className="w-full mt-2 px-3 py-2 border border-gray-300 rounded-md bg-background"
+                className="w-full mt-2 px-3 py-2 border border-border rounded-md bg-background"
               >
                 {websites.map(w => (
                   <option key={w.id} value={w.id}>
@@ -134,7 +134,7 @@ export default function AnalyticsPage() {
               <select
                 value={timeRange}
                 onChange={(e) => setTimeRange(e.target.value as any)}
-                className="w-full mt-2 px-3 py-2 border border-gray-300 rounded-md bg-background"
+                className="w-full mt-2 px-3 py-2 border border-border rounded-md bg-background"
               >
                 <option value="7d">Last 7 Days</option>
                 <option value="30d">Last 30 Days</option>
@@ -209,15 +209,15 @@ export default function AnalyticsPage() {
                 <AreaChart data={scanHistory}>
                   <defs>
                     <linearGradient id="colorHealth" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#4094d9" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#4094d9" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="date" />
                   <YAxis domain={[0, 100]} />
                   <Tooltip formatter={(value) => `${value}%`} />
-                  <Area type="monotone" dataKey="siteHealth" stroke="#3b82f6" fillOpacity={1} fill="url(#colorHealth)" />
+                  <Area type="monotone" dataKey="siteHealth" stroke="#4094d9" fillOpacity={1} fill="url(#colorHealth)" />
                 </AreaChart>
               </ResponsiveContainer>
             ) : (
@@ -243,10 +243,10 @@ export default function AnalyticsPage() {
                   <YAxis yAxisId="right" orientation="right" />
                   <Tooltip />
                   <Legend />
-                  <Line yAxisId="left" type="monotone" dataKey="siteHealth" stroke="#3b82f6" name="Site Health %" strokeWidth={2} />
+                  <Line yAxisId="left" type="monotone" dataKey="siteHealth" stroke="#4094d9" name="Site Health %" strokeWidth={2} />
                   <Line yAxisId="left" type="monotone" dataKey="aiSearch" stroke="#10b981" name="AI Search %" strokeWidth={2} />
-                  <Line yAxisId="right" type="monotone" dataKey="security" stroke="#f59e0b" name="Security Score" strokeWidth={2} />
-                  <Line yAxisId="left" type="monotone" dataKey="performance" stroke="#8b5cf6" name="Performance %" strokeWidth={2} />
+                  <Line yAxisId="right" type="monotone" dataKey="security" stroke="#F08530" name="Security Score" strokeWidth={2} />
+                  <Line yAxisId="left" type="monotone" dataKey="performance" stroke="#160D76" name="Performance %" strokeWidth={2} />
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>
@@ -266,7 +266,7 @@ export default function AnalyticsPage() {
                   <XAxis dataKey="date" />
                   <YAxis />
                   <Tooltip />
-                  <Bar dataKey="pagesFound" fill="#06b6d4" name="Pages Found" />
+                  <Bar dataKey="pagesFound" fill="#4094d9" name="Pages Found" />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>

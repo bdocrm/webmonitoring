@@ -159,7 +159,7 @@ export default function WebsitesPage() {
     switch (type) {
       case 'success': return 'bg-green-500 text-white';
       case 'error': return 'bg-red-500 text-white';
-      case 'info': return 'bg-blue-500 text-white';
+      case 'info': return 'bg-brand-tufts text-white';
     }
   };
 
@@ -177,7 +177,7 @@ export default function WebsitesPage() {
         {/* Page Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Websites</h1>
+            <h1 className="text-3xl font-bold tracking-tight font-heading">Websites</h1>
             <p className="text-muted-foreground mt-2">
               Manage and monitor your websites
             </p>

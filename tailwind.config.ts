@@ -44,9 +44,18 @@ const config: Config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        // Brand colors as direct Tailwind classes
+        brand: {
+          navy: '#160D76',
+          tufts: '#4094d9',
+          orange: '#F08530',
+          powder: '#FFFFFA',
+          black: '#222222',
+        },
       },
       fontFamily: {
-        sans: ['var(--font-sans)', ...defaultTheme.fontFamily.sans],
+        sans: ["'Open Sans'", 'var(--font-sans)', ...defaultTheme.fontFamily.sans],
+        heading: ["'Cardo'", 'var(--font-sans)', ...defaultTheme.fontFamily.serif],
       },
       borderRadius: {
         lg: 'var(--radius)',

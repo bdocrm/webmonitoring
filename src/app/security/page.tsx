@@ -30,7 +30,7 @@ export default function SecurityPage() {
       <div className="space-y-8">
         {/* Page Header */}
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Security</h1>
+          <h1 className="text-3xl font-bold tracking-tight font-heading">Security</h1>
           <p className="text-muted-foreground mt-2">
             Monitor your website&apos;s security posture and vulnerability status
           </p>
@@ -84,7 +84,7 @@ export default function SecurityPage() {
                   <Line
                     type="monotone"
                     dataKey="score"
-                    stroke="#8b5cf6"
+                    stroke="#160D76"
                     strokeWidth={2}
                   />
                 </LineChart>

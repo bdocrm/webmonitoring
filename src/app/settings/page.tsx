@@ -33,7 +33,7 @@ export default function SettingsPage() {
       <div className="space-y-8 max-w-3xl">
         {/* Page Header */}
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+          <h1 className="text-3xl font-bold tracking-tight font-heading">Settings</h1>
           <p className="text-muted-foreground mt-2">
             Configure application settings and preferences
           </p>

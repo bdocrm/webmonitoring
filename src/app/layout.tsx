@@ -1,16 +1,17 @@
 import type { Metadata } from 'next';
-import { Inter, JetBrains_Mono } from 'next/font/google';
+import { Open_Sans, Cardo } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
 
-const inter = Inter({
+const openSans = Open_Sans({
   variable: '--font-sans',
   subsets: ['latin'],
 });
 
-const jetBrainsMono = JetBrains_Mono({
-  variable: '--font-mono',
+const cardo = Cardo({
+  variable: '--font-heading',
   subsets: ['latin'],
+  weight: ['400', '700'],
 });
 
 export const metadata: Metadata = {
@@ -29,7 +30,7 @@ export default function RootLayout({
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body className={`${inter.variable} ${jetBrainsMono.variable} antialiased`}>
+      <body className={`${openSans.variable} ${cardo.variable} antialiased`}>
         <Providers>{children}</Providers>
       </body>
     </html>
