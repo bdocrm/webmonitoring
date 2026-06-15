@@ -21,6 +21,7 @@ export async function GET() {
       NEXTAUTH_URL: !!process.env.NEXTAUTH_URL,
       NEXTAUTH_SECRET: !!process.env.NEXTAUTH_SECRET,
       DATABASE_URL: !!process.env.DATABASE_URL,
+      PRISMA_DATABASE_URL: !!process.env.PRISMA_DATABASE_URL,
       ADMIN_EMAIL: !!process.env.ADMIN_EMAIL,
       ADMIN_PASSWORD: !!process.env.ADMIN_PASSWORD,
       NODE_ENV: process.env.NODE_ENV,
@@ -107,6 +108,9 @@ function generateDiagnosis(
   if (!envStatus.DATABASE_URL) {
     issues.push('🚨 DATABASE_URL is not configured');
   }
+  if (!envStatus.PRISMA_DATABASE_URL) {
+    issues.push('ℹ️ PRISMA_DATABASE_URL not set - Prisma will fall back to DATABASE_URL');
+  }
   if (envStatus.NODE_ENV === 'production' && !envStatus.ADMIN_PASSWORD) {
     issues.push('⚠️ ADMIN_PASSWORD not set - seeding will fail');
   }
@@ -135,7 +139,7 @@ function generateRecommendations(
   }
 
   if (dbStatus === 'failed') {
-    recommendations.push('1. Verify DATABASE_URL is correct');
+    recommendations.push('1. Verify PRISMA_DATABASE_URL or DATABASE_URL is correct');
     recommendations.push('2. Check if PostgreSQL server is running');
     recommendations.push('3. Test connection manually');
   }

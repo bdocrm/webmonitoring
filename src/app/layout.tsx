@@ -17,6 +17,9 @@ const cardo = Cardo({
 export const metadata: Metadata = {
   title: 'WebSiteMonitoringMo! - Website Monitoring System',
   description: 'Professional Web Monitoring System - SEO, Performance, Security Analysis',
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({

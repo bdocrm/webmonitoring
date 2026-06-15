@@ -1,6 +1,7 @@
 export const env = {
   // Database
   DATABASE_URL: process.env.DATABASE_URL || '',
+  PRISMA_DATABASE_URL: process.env.PRISMA_DATABASE_URL || '',
   
   // NextAuth
   NEXTAUTH_URL: process.env.NEXTAUTH_URL || 'http://localhost:3000',
