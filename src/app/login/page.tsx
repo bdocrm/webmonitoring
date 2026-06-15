@@ -53,6 +53,7 @@ export default function LoginPage() {
           InvalidEmail: 'Please enter a valid email',
           NoUser: 'No user found with that email',
           InvalidPassword: 'Incorrect password',
+          DatabaseUnavailable: 'Authentication service is temporarily unavailable. Please try again in a moment.',
         };
         
         setError(errorMessages[result.error] || 'Login failed. Please try again.');

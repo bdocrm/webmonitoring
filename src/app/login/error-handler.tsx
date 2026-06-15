@@ -18,6 +18,7 @@ export function LoginErrorHandler({ onError }: LoginErrorHandlerProps) {
         InvalidEmail: 'Please enter a valid email address.',
         NoUser: 'No account found with that email.',
         InvalidPassword: 'Incorrect password.',
+        DatabaseUnavailable: 'Authentication service is temporarily unavailable. Please try again in a moment.',
         SessionExpired: 'Your session has expired. Please log in again.',
       };
       onError(errorMessages[errorParam] || 'Login failed. Please try again.');

@@ -6,6 +6,21 @@ import { prisma } from '@/lib/prisma';
 import bcryptjs from 'bcryptjs';
 import '@/app/api/auth/types';
 
+function isDatabaseConnectivityError(error: unknown) {
+  const err = error as { code?: string; meta?: { code?: string }; message?: string };
+  const message = `${err?.message || ''} ${err?.code || ''} ${err?.meta?.code || ''}`.toLowerCase();
+
+  return (
+    err?.code === 'P1001' ||
+    err?.code === 'P1002' ||
+    err?.meta?.code === 'P1001' ||
+    err?.meta?.code === 'P1002' ||
+    message.includes("can't reach database server") ||
+    message.includes('database server at') ||
+    message.includes('connection refused')
+  );
+}
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -56,6 +71,11 @@ export const authOptions: NextAuthOptions = {
             role: user.role,
           };
         } catch (error) {
+          if (isDatabaseConnectivityError(error)) {
+            console.error('💥 Auth error: database connection unavailable');
+            throw new Error('DatabaseUnavailable');
+          }
+
           console.error('💥 Auth error:', error);
           throw error;
         }
