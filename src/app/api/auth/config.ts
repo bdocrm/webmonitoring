@@ -21,6 +21,12 @@ function isDatabaseConnectivityError(error: unknown) {
   );
 }
 
+function getDatabaseSource() {
+  if (process.env.PRISMA_DATABASE_URL) return 'PRISMA_DATABASE_URL';
+  if (process.env.DATABASE_URL) return 'DATABASE_URL';
+  return 'none';
+}
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -38,6 +44,9 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
+          const datasourceSource = getDatabaseSource();
+          console.log('🔎 Prisma datasource source:', datasourceSource);
+
           const user = await prisma.user.findUnique({
             where: { email: credentials.email },
           });
@@ -72,8 +81,28 @@ export const authOptions: NextAuthOptions = {
           };
         } catch (error) {
           if (isDatabaseConnectivityError(error)) {
-            console.error('💥 Auth error: database connection unavailable');
-            throw new Error('DatabaseUnavailable');
+            const datasourceSource = getDatabaseSource();
+            console.error('💥 Auth error: database connection unavailable via', datasourceSource);
+
+            const envAdminEmail = process.env.ADMIN_EMAIL;
+            const envAdminPassword = process.env.ADMIN_PASSWORD;
+
+            if (
+              envAdminEmail &&
+              envAdminPassword &&
+              credentials.email === envAdminEmail &&
+              credentials.password === envAdminPassword
+            ) {
+              console.warn('⚠️ Falling back to env-based admin auth because the database is unavailable');
+              return {
+                id: 'env-admin',
+                email: envAdminEmail,
+                name: 'Admin',
+                role: 'admin',
+              };
+            }
+
+            throw new Error(`DatabaseUnavailable:${datasourceSource}`);
           }
 
           console.error('💥 Auth error:', error);

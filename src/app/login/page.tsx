@@ -55,8 +55,12 @@ export default function LoginPage() {
           InvalidPassword: 'Incorrect password',
           DatabaseUnavailable: 'Authentication service is temporarily unavailable. Please try again in a moment.',
         };
-        
-        setError(errorMessages[result.error] || 'Login failed. Please try again.');
+
+        const normalizedError = result.error.startsWith('DatabaseUnavailable')
+          ? 'DatabaseUnavailable'
+          : result.error;
+
+        setError(errorMessages[normalizedError] || 'Login failed. Please try again.');
         setLoading(false);
       } else if (result?.ok) {
         console.log('✅ Login successful, redirecting...');
