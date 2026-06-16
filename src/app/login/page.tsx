@@ -66,7 +66,18 @@ export default function LoginPage() {
         if (rememberMe) {
           localStorage.setItem('rememberEmail', email);
         }
-        window.location.assign(result.url || '/dashboard');
+        const redirectUrl = result.url || `${window.location.origin}/dashboard`;
+        const sessionRes = await fetch('/api/auth/session', { cache: 'no-store' });
+        const session = await sessionRes.json();
+
+        if (!session?.user) {
+          setError('Login passed, but the browser did not receive the session cookie. Check NEXTAUTH_URL and NEXTAUTH_SECRET in Vercel, then redeploy.');
+          setLoading(false);
+          return;
+        }
+
+        window.location.href = redirectUrl;
+        window.setTimeout(() => window.location.replace(redirectUrl), 1000);
       } else {
         console.error('❓ Unknown result:', result);
         setError('Login failed - unknown error');
