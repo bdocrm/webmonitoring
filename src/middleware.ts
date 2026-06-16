@@ -1,6 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
+async function getAuthToken(request: NextRequest) {
+  const secret = process.env.NEXTAUTH_SECRET;
+  const isHttps = request.nextUrl.protocol === 'https:';
+
+  return (
+    (await getToken({ req: request, secret, secureCookie: isHttps })) ||
+    (await getToken({ req: request, secret, secureCookie: !isHttps }))
+  );
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -18,7 +28,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Check if user is authenticated for protected page routes
-  const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
+  const token = await getAuthToken(request);
 
   if (!token) {
     const loginUrl = new URL('/login', request.url);
