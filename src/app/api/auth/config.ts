@@ -22,8 +22,8 @@ function isDatabaseConnectivityError(error: unknown) {
 }
 
 function getDatabaseSource() {
-  if (process.env.PRISMA_DATABASE_URL) return 'PRISMA_DATABASE_URL';
   if (process.env.DATABASE_URL) return 'DATABASE_URL';
+  if (process.env.PRISMA_DATABASE_URL) return 'PRISMA_DATABASE_URL';
   return 'none';
 }
 
