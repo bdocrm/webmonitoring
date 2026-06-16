@@ -39,6 +39,16 @@ interface Website {
   };
 }
 
+function formatDisplayName(displayName: string) {
+  const compactName = displayName.replace(/[\s-]/g, '').toLowerCase();
+
+  if (compactName === 'allianzsynergia') {
+    return 'Allianz-Synergia';
+  }
+
+  return displayName;
+}
+
 export default function PublicDashboard() {
   const params = useParams();
   const [website, setWebsite] = useState<Website | null>(null);
@@ -77,7 +87,7 @@ export default function PublicDashboard() {
         </div>
         
         <div className="relative z-10 flex flex-col items-center text-center">
-          <div className="mb-4 inline-flex items-center gap-3 rounded-2xl bg-brand-black/20 px-3 py-2.5 backdrop-blur-md">
+          <div className="mb-4 inline-flex items-center">
             <Image src={logoWhite} alt="WebSiteMonitoringMo" priority className="h-8 w-auto" />
           </div>
           <Loader2 className="w-12 h-12 animate-spin mx-auto text-brand-orange" />
@@ -98,7 +108,7 @@ export default function PublicDashboard() {
         </div>
         
         <div className="relative z-10 flex flex-col items-center text-center">
-          <div className="mb-4 inline-flex items-center gap-3 rounded-2xl bg-brand-black/20 px-3 py-2.5 backdrop-blur-md">
+          <div className="mb-4 inline-flex items-center">
             <Image src={logoWhite} alt="WebSiteMonitoringMo" priority className="h-8 w-auto" />
           </div>
           <AlertCircle className="w-12 h-12 mx-auto text-brand-orange animate-pulse" />
@@ -126,6 +136,7 @@ export default function PublicDashboard() {
   const perf = website.analytics || {
     performanceScore: 0,
   };
+  const displayName = formatDisplayName(website.displayName);
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-brand-tufts';
@@ -152,7 +163,7 @@ export default function PublicDashboard() {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Brand Mark */}
         <div className="flex justify-end mb-5">
-          <div className="inline-flex items-center rounded-2xl bg-brand-black/20 backdrop-blur-md px-3 py-2.5 shadow-lg shadow-brand-black/20">
+          <div className="inline-flex items-center">
             <Image
               src={logoWhite}
               alt="WebSiteMonitoringMo"
@@ -172,7 +183,7 @@ export default function PublicDashboard() {
 
           {/* Main Title with Animation */}
           <h1 className="mx-auto max-w-4xl text-4xl md:text-6xl font-bold font-heading tracking-tight leading-none bg-gradient-to-r from-brand-orange via-brand-powder to-brand-tufts bg-clip-text text-transparent mb-3 animate-gradient-x bg-size-200">
-            {website.displayName}
+            {displayName}
           </h1>
           <p className="text-brand-tufts/90 text-base md:text-xl font-light tracking-[0.12em] uppercase">{website.domain}</p>
           
@@ -338,8 +349,8 @@ export default function PublicDashboard() {
                 const url = window.location.href;
                 if (navigator.share) {
                   navigator.share({
-                    title: `${website.displayName} - WebSiteMonitoringMo Dashboard`,
-                    text: `Check out the monitoring dashboard for ${website.displayName}`,
+                    title: `${displayName} - WebSiteMonitoringMo Dashboard`,
+                    text: `Check out the monitoring dashboard for ${displayName}`,
                     url: url
                   });
                 } else {
