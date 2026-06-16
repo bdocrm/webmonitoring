@@ -3,7 +3,6 @@
 import { Suspense } from 'react';
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import { AlertCircle, Loader2, LogIn, Mail, Lock } from 'lucide-react';
 import { LoginErrorHandler } from './error-handler';
 
@@ -13,7 +12,6 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,6 +39,7 @@ export default function LoginPage() {
         email,
         password,
         redirect: false,
+        callbackUrl: '/dashboard',
       });
 
       console.log('📡 signIn result:', result);
@@ -67,9 +66,7 @@ export default function LoginPage() {
         if (rememberMe) {
           localStorage.setItem('rememberEmail', email);
         }
-        setTimeout(() => {
-          router.push('/dashboard');
-        }, 500);
+        window.location.assign(result.url || '/dashboard');
       } else {
         console.error('❓ Unknown result:', result);
         setError('Login failed - unknown error');

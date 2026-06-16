@@ -78,22 +78,25 @@ export default function Dashboard() {
       const data = await res.json();
       if (Array.isArray(data)) {
         setWebsites(data);
-        // Update selected website with fresh data
-        if (selectedWebsite) {
-          const updated = data.find((w: Website) => w.id === selectedWebsite.id);
-          if (updated) setSelectedWebsite(updated);
-        } else if (data.length > 0) {
-          setSelectedWebsite(data[0]);
-        }
+        setSelectedWebsite((current) => {
+          if (!data.length) return null;
+          if (!current) return data[0];
+
+          return data.find((w: Website) => w.id === current.id) || data[0];
+        });
       } else {
         setError(data.error || 'Failed to load websites');
+        setWebsites([]);
+        setSelectedWebsite(null);
       }
     } catch (err) {
       setError('Failed to connect to server');
+      setWebsites([]);
+      setSelectedWebsite(null);
     } finally {
       setLoading(false);
     }
-  }, [selectedWebsite]);
+  }, []);
 
   useEffect(() => {
     fetchWebsites();
