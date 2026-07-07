@@ -19,7 +19,7 @@ export const calculateSiteHealthScore = (metrics: {
   const h1Coverage = metrics.hasH1Rate ?? 100;
 
   const score = Math.round(
-    18 +
+    28 +
     metaCoverage * 0.22 +
     titleCoverage * 0.1 +
     crawlCoverage * 0.2 +

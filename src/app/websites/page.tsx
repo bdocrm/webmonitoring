@@ -24,6 +24,11 @@ interface ScanResult {
   warnings: number;
   siteHealthScore: number;
   securityRating: number;
+  emailNotifications?: Record<string, {
+    ok: boolean;
+    reason?: string;
+    recipientCount?: number;
+  }>;
 }
 
 interface Toast {
@@ -45,6 +50,15 @@ export default function WebsitesPage() {
   const showToast = (type: Toast['type'], message: string) => {
     setToast({ type, message });
     setTimeout(() => setToast(null), 5000);
+  };
+
+  const getEmailStatusText = (result: ScanResult) => {
+    const emailResult = result.emailNotifications?.scanCompleted || result.emailNotifications?.scanStarted;
+
+    if (!emailResult) return '';
+    if (emailResult.ok) return ` Email sent to ${emailResult.recipientCount || 0} recipient(s).`;
+
+    return ` Email not sent: ${emailResult.reason || 'unknown error'}.`;
   };
 
   // Fetch websites from API
@@ -136,7 +150,7 @@ export default function WebsitesPage() {
         const result = await res.json();
         setScanResult(result);
         await fetchWebsites();
-        showToast('success', `✓ Scan completed! Found ${result.pagesFound || 0} pages. Health: ${result.siteHealthScore || 0}%`);
+        showToast('success', `✓ Scan completed! Found ${result.pagesFound || 0} pages. Health: ${result.siteHealthScore || 0}%.${getEmailStatusText(result)}`);
       } else {
         const data = await res.json();
         showToast('error', data.error || 'Scan failed');

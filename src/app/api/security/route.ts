@@ -5,6 +5,7 @@ import {
   checkSSLCertificate,
   checkSecurityHeaders,
 } from '@/lib/security/rating';
+import { sendAlertEmail } from '@/lib/notifications/email';
 
 // Mark route as dynamic to prevent pre-rendering during build
 export const dynamic = 'force-dynamic';
@@ -49,6 +50,22 @@ export async function POST(request: NextRequest) {
       hasXXSSProtection: headers.hasXXSSProtection,
       cveIssues: 0,
     });
+
+    const httpsStatus = sslCertificateValid || website.domain.startsWith('https');
+
+    if (!sslCertificateValid || securityRating < 700 || !httpsStatus) {
+      await sendAlertEmail('site_down', {
+        websiteName: website.displayName,
+        domain: website.domain,
+        message: 'Security scan detected a possible outage or weak security posture.',
+        meta: {
+          websiteId,
+          securityRating,
+          sslCertificateValid,
+          httpsStatus,
+        },
+      });
+    }
 
     // Update security metrics
     const securityMetrics = await prisma.securityMetrics.update({

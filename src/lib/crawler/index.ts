@@ -7,6 +7,7 @@ import {
   calculateCrawlability,
   calculateInternalLinkingScore,
 } from '@/lib/seo/scoring';
+import { sendAlertEmail } from '@/lib/notifications/email';
 
 export interface CrawlResult {
   url: string;
@@ -35,8 +36,14 @@ interface SecurityHeaders {
 const crawledUrls = new Set<string>();
 const urlQueue: string[] = [];
 
+function getShareDashboardUrl(websiteId: string) {
+  return `${env.SHARE_DASHBOARD_BASE_URL.replace(/\/$/, '')}/share/${websiteId}`;
+}
+
 export const crawlWebsite = async (domain: string, websiteId: string) => {
   const baseUrl = !domain.startsWith('http') ? `https://${domain}` : domain;
+  const shareDashboardUrl = getShareDashboardUrl(websiteId);
+  const emailNotifications: Record<string, Awaited<ReturnType<typeof sendAlertEmail>>> = {};
   
   crawledUrls.clear();
   urlQueue.length = 0;
@@ -47,6 +54,18 @@ export const crawlWebsite = async (domain: string, websiteId: string) => {
       data: {
         websiteId,
         status: 'running',
+      },
+    });
+
+    emailNotifications.scanStarted = await sendAlertEmail('scan_started', {
+      websiteName: domain,
+      domain: baseUrl,
+      message: 'A website scan has started.',
+      actionUrl: shareDashboardUrl,
+      actionLabel: 'View Share Dashboard',
+      meta: {
+        websiteId,
+        startedAt: new Date().toISOString(),
       },
     });
 
@@ -83,6 +102,21 @@ export const crawlWebsite = async (domain: string, websiteId: string) => {
           // Count errors/warnings
           if (result.statusCode >= 400) errorCount++;
           if (!result.title || !result.metaDescription) warningCount++;
+
+          if (results.length % 5 === 0) {
+            emailNotifications.scanProgress = await sendAlertEmail('scan_progress', {
+              websiteName: domain,
+              domain: baseUrl,
+              message: `Scan is still in progress. ${results.length} page(s) processed so far.`,
+              actionUrl: shareDashboardUrl,
+              actionLabel: 'View Share Dashboard',
+              meta: {
+                websiteId,
+                pagesProcessed: results.length,
+                errors: errorCount,
+              },
+            });
+          }
 
           // Save page to database
           await prisma.page.upsert({
@@ -304,6 +338,23 @@ export const crawlWebsite = async (domain: string, websiteId: string) => {
       data: { lastScanAt: new Date() },
     });
 
+    emailNotifications.scanCompleted = await sendAlertEmail('scan_completed', {
+      websiteName: domain,
+      domain: baseUrl,
+      message: `Scan completed for ${domain}.`,
+      actionUrl: shareDashboardUrl,
+      actionLabel: 'View Share Dashboard',
+      meta: {
+        websiteId,
+        pagesFound: results.length,
+        pagesScanned: crawledUrls.size,
+        errors: errorCount,
+        warnings: warningCount,
+        siteHealthScore,
+        securityRating,
+      },
+    });
+
     return {
       ...scan,
       pagesScanned: crawledUrls.size,
@@ -312,9 +363,21 @@ export const crawlWebsite = async (domain: string, websiteId: string) => {
       warnings: warningCount,
       siteHealthScore,
       securityRating,
+      emailNotifications,
     };
   } catch (error) {
     console.error('Crawler error:', error);
+    emailNotifications.scanError = await sendAlertEmail('security_alert', {
+      websiteName: domain,
+      domain: baseUrl,
+      message: 'The crawler encountered an error while scanning the website.',
+      actionUrl: shareDashboardUrl,
+      actionLabel: 'View Share Dashboard',
+      meta: {
+        websiteId,
+        error: error instanceof Error ? error.message : String(error),
+      },
+    });
     throw error;
   }
 };

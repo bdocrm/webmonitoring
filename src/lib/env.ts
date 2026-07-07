@@ -6,6 +6,7 @@ export const env = {
   // NextAuth
   NEXTAUTH_URL: process.env.NEXTAUTH_URL || 'http://localhost:3000',
   NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET || 'dev-secret',
+  SHARE_DASHBOARD_BASE_URL: process.env.SHARE_DASHBOARD_BASE_URL || process.env.NEXTAUTH_URL || 'http://localhost:3000',
   
   // APIs
   GOOGLE_PAGESPEED_API_KEY: process.env.GOOGLE_PAGESPEED_API_KEY || '',
@@ -16,6 +17,8 @@ export const env = {
   SMTP_PORT: parseInt(process.env.SMTP_PORT || '587'),
   SMTP_USER: process.env.SMTP_USER || '',
   SMTP_PASS: process.env.SMTP_PASS || '',
+  ALERT_EMAIL_RECIPIENTS: process.env.ALERT_EMAIL_RECIPIENTS || '',
+  ENABLE_EMAIL_ALERTS: process.env.ENABLE_EMAIL_ALERTS !== 'false',
   
   // Crawler
   CRAWLER_TIMEOUT: parseInt(process.env.CRAWLER_TIMEOUT || '30000'),

@@ -71,6 +71,15 @@ export default function Dashboard() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const getEmailStatusText = (result: any) => {
+    const emailResult = result.emailNotifications?.scanCompleted || result.emailNotifications?.scanStarted;
+
+    if (!emailResult) return '';
+    if (emailResult.ok) return ` Email sent to ${emailResult.recipientCount || 0} recipient(s).`;
+
+    return ` Email not sent: ${emailResult.reason || 'unknown error'}.`;
+  };
+
   const fetchWebsites = useCallback(async () => {
     try {
       setError(null);
@@ -116,7 +125,7 @@ export default function Dashboard() {
       if (res.ok) {
         const result = await res.json();
         await fetchWebsites();
-        showToast('success', `✓ Scan complete! Found ${result.pagesFound || 0} pages. Health: ${result.siteHealthScore || 0}%`);
+        showToast('success', `✓ Scan complete! Found ${result.pagesFound || 0} pages. Health: ${result.siteHealthScore || 0}%.${getEmailStatusText(result)}`);
       } else {
         const data = await res.json();
         showToast('error', data.error || 'Scan failed');
