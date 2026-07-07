@@ -1,6 +1,12 @@
 import * as cheerio from 'cheerio';
 import { prisma } from '@/lib/prisma';
 import { env } from '@/lib/env';
+import {
+  calculateSiteHealthScore,
+  calculateAISearchHealth,
+  calculateCrawlability,
+  calculateInternalLinkingScore,
+} from '@/lib/seo/scoring';
 
 export interface CrawlResult {
   url: string;
@@ -128,62 +134,53 @@ export const crawlWebsite = async (domain: string, websiteId: string) => {
       }
     }
 
-    // Calculate Advanced SEO scores (Semrush-like algorithm with weighted factors)
+    // Calculate SEO scores using the shared, more balanced algorithm.
     const totalPages = results.length;
-    
-    // Factor 1: Meta Tags (25% weight) - Title, Description, H1
-    const pagesWithTitle = results.filter(r => r.title && r.title.length > 0).length;
-    const pagesWithDescription = results.filter(r => r.metaDescription && r.metaDescription.length > 30).length;
-    const pagesWithH1 = results.filter(r => r.hasH1).length;
-    const metaTagScore = totalPages > 0 
-      ? Math.round(((pagesWithTitle + pagesWithDescription + pagesWithH1) / (totalPages * 3)) * 100)
-      : 0;
+    const successfulPages = results.filter((r) => r.statusCode < 400).length;
+    const pagesWithDescription = results.filter((r) => r.metaDescription && r.metaDescription.trim().length > 30).length;
+    const pagesWithH1 = results.filter((r) => r.hasH1).length;
+    const pagesWithMissingMetaDescription = Math.max(0, totalPages - pagesWithDescription);
+    const titleFrequency = new Map<string, number>();
+    results.forEach((result) => {
+      if (result.title) {
+        titleFrequency.set(result.title, (titleFrequency.get(result.title) ?? 0) + 1);
+      }
+    });
+    const pagesWithDuplicateTitle = results.filter(
+      (result) => result.title && (titleFrequency.get(result.title) ?? 0) > 1
+    ).length;
+    const weakInternalLinkPages = results.filter((result) => result.internalLinks === 0).length;
+    const hasH1Rate = totalPages > 0 ? Math.round((pagesWithH1 / totalPages) * 100) : 0;
 
-    // Factor 2: Content Quality (20% weight) - Word count, images, headings
-    const avgWordCount = totalPages > 0 ? results.reduce((acc, r) => acc + r.wordCount, 0) / totalPages : 0;
-    const avgImageCount = totalPages > 0 ? results.reduce((acc, r) => acc + r.imageCount, 0) / totalPages : 0;
-    let contentScore = 0;
-    if (totalPages > 0) {
-      const wordScore = avgWordCount >= 300 ? 100 : Math.round((avgWordCount / 300) * 100);
-      const imageScore = avgImageCount >= 1 ? 100 : avgImageCount > 0 ? 50 : 0;
-      contentScore = Math.round((wordScore + imageScore) / 2);
-    }
+    const siteHealthScore = calculateSiteHealthScore({
+      pagesWithMissingMetaDescription,
+      pagesWithDuplicateTitle,
+      brokenInternalLinks: weakInternalLinkPages,
+      totalPages,
+      pagesCrawled: successfulPages,
+      hasH1Rate,
+    });
 
-    // Factor 3: Link Structure (20% weight) - Internal & External links
-    const totalInternalLinks = results.reduce((acc, r) => acc + r.internalLinks, 0);
-    const totalExternalLinks = results.reduce((acc, r) => acc + r.externalLinks, 0);
-    const linkScore = Math.min(100, Math.round((totalInternalLinks + totalExternalLinks) / 2));
+    const aiSearchHealth = calculateAISearchHealth({
+      pagesCrawled: successfulPages,
+      totalPages,
+      pagesWithMissingMetaDescription,
+      hasH1Rate,
+      mobile_friendlyRate: 85,
+    });
 
-    // Factor 4: Crawlability (15% weight) - No errors, all pages accessible
-    const pagesWithoutErrors = results.filter(r => r.statusCode === 200).length;
-    const crawlabilityScore = totalPages > 0 ? Math.round((pagesWithoutErrors / totalPages) * 100) : 0;
+    const crawlabilityScore = calculateCrawlability({
+      pagesCrawled: successfulPages,
+      totalPages,
+      brokenInternalLinks: weakInternalLinkPages,
+    });
 
-    // Factor 5: Overall Structure (20% weight) - Page count, consistency
-    const pageCountScore = totalPages >= 10 ? 100 : totalPages >= 5 ? 80 : totalPages >= 1 ? 60 : 0;
-    const consistencyScore = pagesWithDescription > 0 ? 100 : 50;
-    const structureScore = Math.round((pageCountScore + consistencyScore) / 2);
-
-    // Calculate weighted Site Health Score (0-100)
-    const siteHealthScore = Math.round(
-      (metaTagScore * 0.25) +
-      (contentScore * 0.20) +
-      (linkScore * 0.20) +
-      (crawlabilityScore * 0.15) +
-      (structureScore * 0.20)
-    );
-
-    // AI Search Health = combination of all factors
-    const aiSearchHealth = Math.round(
-      (metaTagScore * 0.30) +
-      (contentScore * 0.25) +
-      (linkScore * 0.20) +
-      (crawlabilityScore * 0.25)
-    );
-    
-    // Internal Linking Score based on actual link distribution
-    const internalLinkingScore = totalInternalLinks > 0 
-      ? Math.min(100, Math.round((totalInternalLinks / totalPages) * 15))
-      : 30; // Penalty if no internal links
+    const internalLinkingScore = calculateInternalLinkingScore({
+      orphanPages: weakInternalLinkPages,
+      brokenInternalLinks: weakInternalLinkPages,
+      totalPages,
+      averageInternalLinksPerPage: totalPages > 0 ? results.reduce((acc, r) => acc + r.internalLinks, 0) / totalPages : 0,
+    });
 
     // Calculate Performance Score (0-100)
     const avgLoadTime = totalPages > 0 
@@ -210,8 +207,8 @@ export const crawlWebsite = async (domain: string, websiteId: string) => {
         crawlability: crawlabilityScore,
         internalLinking: internalLinkingScore,
         totalPages,
-        pagesCrawled: totalPages,
-        pagesWithMissingMetaDescription: totalPages - pagesWithDescription,
+        pagesCrawled: successfulPages,
+        pagesWithMissingMetaDescription,
         lastCalculated: new Date(),
       },
       update: {
@@ -220,8 +217,8 @@ export const crawlWebsite = async (domain: string, websiteId: string) => {
         crawlability: crawlabilityScore,
         internalLinking: internalLinkingScore,
         totalPages,
-        pagesCrawled: totalPages,
-        pagesWithMissingMetaDescription: totalPages - pagesWithDescription,
+        pagesCrawled: successfulPages,
+        pagesWithMissingMetaDescription,
         lastCalculated: new Date(),
       },
     });

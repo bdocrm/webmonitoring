@@ -44,22 +44,22 @@ export async function POST(request: NextRequest) {
       (p) =>
         pages.filter((other) => other.title === p.title).length > 1
     ).length;
-    const brokenInternalLinks = pages.reduce((sum, p) => sum + p.internalLinks, 0) / pages.length;
+    const brokenInternalLinks = pages.filter((p) => p.internalLinks === 0).length;
     const orphanPages = pages.filter((p) => p.internalLinks === 0).length;
     const averageInternalLinksPerPage =
       pages.reduce((sum, p) => sum + p.internalLinks, 0) / pages.length;
 
     // Calculate scores
+    const hasH1Rate = (pages.filter((p) => p.hasH1).length / totalPages) * 100;
+
     const siteHealthScore = calculateSiteHealthScore({
       pagesWithMissingMetaDescription,
       pagesWithDuplicateTitle,
-      brokenInternalLinks: Math.floor(brokenInternalLinks),
+      brokenInternalLinks,
       totalPages,
       pagesCrawled,
+      hasH1Rate,
     });
-
-    const hasH1Rate =
-      (pages.filter((p) => p.hasH1).length / totalPages) * 100;
 
     const aiSearchHealth = calculateAISearchHealth({
       pagesCrawled,
@@ -72,12 +72,12 @@ export async function POST(request: NextRequest) {
     const crawlability = calculateCrawlability({
       pagesCrawled,
       totalPages,
-      brokenInternalLinks: Math.floor(brokenInternalLinks),
+      brokenInternalLinks,
     });
 
     const internalLinking = calculateInternalLinkingScore({
       orphanPages,
-      brokenInternalLinks: Math.floor(brokenInternalLinks),
+      brokenInternalLinks,
       totalPages,
       averageInternalLinksPerPage,
     });
@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
         orphanPages,
         pagesWithMissingMetaDescription,
         pagesWithDuplicateTitle,
-        brokenInternalLinks: Math.floor(brokenInternalLinks),
+        brokenInternalLinks,
         lastCalculated: new Date(),
       },
     });
