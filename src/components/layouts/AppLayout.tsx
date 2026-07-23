@@ -14,6 +14,7 @@ import {
   Menu,
   X,
   TrendingUp,
+  Radio,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { UserMenu } from '@/components/UserMenu';
@@ -22,6 +23,7 @@ const navItems = [
   { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { label: 'Websites', href: '/websites', icon: Globe },
   { label: 'Analytics', href: '/analytics', icon: TrendingUp },
+  { label: 'Listening', href: '/listening', icon: Radio },
   { label: 'SEO', href: '/seo', icon: Search },
   { label: 'Performance', href: '/performance', icon: Zap },
   { label: 'Security', href: '/security', icon: Shield },

@@ -36,6 +36,9 @@ interface Website {
     speedIndex: number;
     cls: number;
   };
+  _count?: {
+    errorLogs: number;
+  };
 }
 
 interface Toast {
@@ -178,9 +181,15 @@ export default function Dashboard() {
     cls: 0,
   };
 
-  // Calculate error count (placeholder - would come from scans)
-  const errorCount = selectedWebsite ? Math.floor(Math.random() * 10) : 0;
-  const warningCount = selectedWebsite ? Math.floor(Math.random() * 5) : 0;
+  const errorCount = selectedWebsite?._count?.errorLogs || 0;
+  const warningCount = selectedWebsite ? [
+    seo.siteHealthScore < 70,
+    seo.crawlability < 80,
+    seo.internalLinking < 80,
+    !security.httpsStatus,
+    !security.sslCertificateValid,
+    perf.performanceScore < 80,
+  ].filter(Boolean).length : 0;
 
   const recentInsights = selectedWebsite ? [
     {
@@ -405,7 +414,7 @@ export default function Dashboard() {
             {/* KPI Cards - Row 2 */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
               <KPICard
-                title="Warnings"
+                title="Health Warnings"
                 value={String(warningCount)}
                 trend={warningCount <= 3 ? 'down' : 'up'}
                 icon="🛑"

@@ -14,6 +14,9 @@ export async function GET() {
         seoMetrics: true,
         securityMetrics: true,
         analytics: true,
+        _count: {
+          select: { errorLogs: true },
+        },
       },
     });
     

@@ -10,6 +10,13 @@ export const env = {
   
   // APIs
   GOOGLE_PAGESPEED_API_KEY: process.env.GOOGLE_PAGESPEED_API_KEY || '',
+  LISTENING_BRAND_NAME: process.env.LISTENING_BRAND_NAME || 'Allianz-Synergia',
+  LISTENING_SEARCH_TERMS: process.env.LISTENING_SEARCH_TERMS || '',
+  LISTENING_EXCLUDED_TERMS: process.env.LISTENING_EXCLUDED_TERMS || '',
+  LISTENING_WATCH_URLS: process.env.LISTENING_WATCH_URLS || '',
+  GOOGLE_ALERTS_RSS_URLS: process.env.GOOGLE_ALERTS_RSS_URLS || '',
+  GOOGLE_CUSTOM_SEARCH_API_KEY: process.env.GOOGLE_CUSTOM_SEARCH_API_KEY || '',
+  GOOGLE_CUSTOM_SEARCH_CX: process.env.GOOGLE_CUSTOM_SEARCH_CX || '',
   
   // Email
   EMAIL_FROM: process.env.EMAIL_FROM || 'noreply@websitemonitoring.com',
